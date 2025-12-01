@@ -18,7 +18,7 @@ int main() {
 		}
 		if (dir == 'L') {
 			pos = (pos - dist) % 100;
-			if (pos , 0) {
+			if (pos < 0) {
 				pos += 100;
 			}
 		} else if (dir == 'R') {
