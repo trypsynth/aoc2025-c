@@ -5,12 +5,18 @@
 
 bool is_repeated(const char* s) {
     size_t n = strlen(s);
-    if (n % 2 != 0) return false;
-    size_t half = n / 2;
-    for (size_t i = 0; i < half; i++) {
-        if (s[i] != s[i + half]) return false;
+    for (size_t len = 1; len <= n / 2; len++) {
+        if (n % len != 0) continue;
+        bool ok = true;
+        for (size_t i = len; i < n; i++) {
+            if (s[i] != s[i % len]) {
+                ok = false;
+                break;
+            }
+        }
+        if (ok) return true;
     }
-    return true;
+    return false;
 }
 
 int main() {
