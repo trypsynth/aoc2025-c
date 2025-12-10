@@ -80,6 +80,9 @@ int main() {
 		}
 		if (ok) fresh++;
 	}
+	long long part2 = 0;
+	for (int i = 0; i < mc; i++) part2 += (merged[i].b - merged[i].a + 1);
 	printf("%d\n", fresh);
+	printf("%lld\n", part2);
 	return EXIT_SUCCESS;
 }
