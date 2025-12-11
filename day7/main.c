@@ -18,30 +18,48 @@ int main(void) {
 			if (grid[rows][i] == 'S') {
 				srow = rows;
 				scol = i;
-				grid[rows][i] = '.'; /* treat S as empty for the simulation */
+				grid[rows][i] = '.';
 			}
 		}
 		rows++;
 	}
 	fclose(f);
-	if (srow < 0 || scol < 0) return EXIT_FAILURE;
-	int beams[256] = {0};
-	int next[256]  = {0};
+	if (srow < 0) return EXIT_FAILURE;
 	long long splits = 0;
-	beams[scol] = 1;
+	int beams1[256] = {0}, next1[256] = {0};
+	beams1[scol] = 1;
 	for (int r = srow + 1; r < rows; r++) {
-		for (int c = 0; c < cols; c++) next[c] = 0;
+		for (int c = 0; c < cols; c++) next1[c] = 0;
 		for (int c = 0; c < cols; c++) {
-			if (!beams[c]) continue;
-			char ch = (c < 256) ? grid[r][c] : '.';
+			if (!beams1[c]) continue;
+			char ch = grid[r][c];
 			if (ch == '^') {
 				splits++;
-				if (c > 0)	  next[c - 1] = 1;
-				if (c + 1 < cols) next[c + 1] = 1;
-			} else next[c] = 1;
+				if (c > 0) next1[c - 1] = 1;
+				if (c + 1 < cols) next1[c + 1] = 1;
+			} else next1[c] = 1;
 		}
-		for (int c = 0; c < cols; c++) beams[c] = next[c];
+		for (int c = 0; c < cols; c++) beams1[c] = next1[c];
 	}
-	printf("%lld\n", splits);
+	long long part1 = splits;
+	unsigned long long beams2[256] = {0};
+	unsigned long long next2[256]  = {0};
+	beams2[scol] = 1;
+	for (int r = srow + 1; r < rows; r++) {
+		for (int c = 0; c < cols; c++) next2[c] = 0;
+		for (int c = 0; c < cols; c++) {
+			unsigned long long count = beams2[c];
+			if (!count) continue;
+			char ch = grid[r][c];
+			if (ch == '^') {
+				if (c > 0) next2[c - 1] += count;
+				if (c + 1 < cols) next2[c + 1] += count;
+			} else next2[c] += count;
+		}
+		for (int c = 0; c < cols; c++) beams2[c] = next2[c];
+	}
+	unsigned long long part2 = 0;
+	for (int c = 0; c < cols; c++) part2 += beams2[c];
+	printf("%lld\n%llu\n", part1, part2);
 	return EXIT_SUCCESS;
 }
